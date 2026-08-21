@@ -39,6 +39,17 @@ Chave gratuita: <https://aistudio.google.com/apikey> · passo a passo completo
 da atividade EaD (partes, critérios, entrega):
 **[docs/atividade-ead-agente-arquivos.md](docs/atividade-ead-agente-arquivos.md)**
 
+## Notebook de estudo (NotebookLM)
+
+📚 <https://notebooklm.google.com/notebook/e147d1de-a7b9-43b8-a349-b1440f212450>
+
+Notebook com todo o material da aula (docs, slides e código) mais as fontes
+canônicas dos temas centrais: documentação das APIs OpenAI (function calling,
+estado de conversa) e Anthropic (Messages, tool use, janela de contexto),
+compatibilidade OpenAI do Gemini e do Ollama, o artigo ReAct e o guia
+*Building Effective AI Agents*. Use para perguntas, revisão e geração de
+quizzes/resumos — citações apontam a fonte exata.
+
 ## Estrutura do repositório
 
 | Caminho | O que é |
