@@ -47,6 +47,7 @@ da atividade EaD (partes, critérios, entrega):
 | [`06-agente-arquivos/`](06-agente-arquivos) | Atividade EaD: [`agente.mjs`](06-agente-arquivos/agente.mjs) (esqueleto com TODOs), [`tools.mjs`](06-agente-arquivos/tools.mjs) (tools prontas com sandbox), [`missao.md`](06-agente-arquivos/missao.md) (objetivo do agente), [`verificar.mjs`](06-agente-arquivos/verificar.mjs) (verificação objetiva — `npm run verificar`) |
 | [`tests/`](tests) | Testes das tools da sandbox (`npm test`) |
 | [`python/`](python) | Espelho Python dos degraus 01, 04, 05 e 06 ([leia antes](python/README.md)) |
+| [`docs/slides-aula-03.pdf`](docs/slides-aula-03.pdf) | Slides da aula (também em [HTML](docs/slides-aula-03.html)) |
 | [`docs/material-apoio.md`](docs/material-apoio.md) | Aprofundamento por degrau + troubleshooting (erros comuns e soluções) |
 | [`docs/guia-preparacao.md`](docs/guia-preparacao.md) | Setup completo (chave, Node, Ollama) — fazer ANTES da aula |
 | [`docs/atividade-ead-agente-arquivos.md`](docs/atividade-ead-agente-arquivos.md) | Enunciado da atividade EaD (prazo: 2 semanas) |
