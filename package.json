@@ -1,0 +1,23 @@
+{
+  "name": "prog-agentica-hellollm",
+  "private": true,
+  "type": "module",
+  "description": "Aula 03 de Programação Agêntica — APIs de LLM e o primeiro agente em loop",
+  "scripts": {
+    "01": "node --env-file=.env 01-fetch-cru.mjs",
+    "02": "node --env-file=.env 02-sdk-openai.mjs",
+    "02b": "node --env-file=.env 02b-sdk-anthropic.mjs",
+    "03": "node --env-file=.env 03-chat-readline.mjs",
+    "03b": "node --env-file=.env 03b-janela-contexto.mjs",
+    "04": "node --env-file=.env 04-tool-calling.mjs",
+    "05": "node --env-file=.env 05-loop-jogo.mjs",
+    "agente": "node --env-file=.env 06-agente-arquivos/agente.mjs",
+    "verificar": "node 06-agente-arquivos/verificar.mjs",
+    "07": "node --env-file=.env 07-hitl.mjs",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.120.0",
+    "openai": "^7.5.0"
+  }
+}
