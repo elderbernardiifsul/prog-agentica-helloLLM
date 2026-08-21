@@ -52,6 +52,14 @@ da atividade EaD (partes, critérios, entrega):
 | [`docs/atividade-ead-agente-arquivos.md`](docs/atividade-ead-agente-arquivos.md) | Enunciado da atividade EaD (prazo: 2 semanas) |
 | `.env.example` | Modelo de configuração — copie para `.env` (que é ignorado pelo git) |
 
+## Nota sobre produção com IA generativa
+
+A **direção pedagógica**, as **ideias de conteúdo**, a **sequência didática**
+e as **atividades** deste material são do professor. O material (texto, código
+e documentação) foi **produzido com apoio de IA generativa**, em sessão com
+forte supervisão humana (HITL): decisões, revisões e ajustes diretos no texto
+pelo professor — o mesmo fluxo de trabalho que esta disciplina ensina.
+
 ## Regras rápidas
 
 - **Nunca** commite sua chave (`.env` está no `.gitignore` — deixe assim).
