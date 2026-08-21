@@ -1,110 +1,156 @@
 # Atividade EaD — Agente de arquivos
 
 **Disciplina:** Programação Agêntica · **Referência:** Aula 03
-**Prazo:** 2 semanas a contar da aula 03 (data-limite registrada no AVA/canal da turma)
+**Prazo:** 2 semanas a contar da aula 03 (data-limite no AVA)
 **Modalidade:** individual (salvo definição contrária na oferta)
 
-## 1. Contexto e objetivo
+## 1. Objetivo
 
-No mini-lab você completou o loop de um agente que persegue um objetivo de
-brinquedo (adivinhar um número). Nesta atividade, o MESMO padrão de loop vira
-um agente que cumpre uma missão real e verificável: montar a estrutura de um
-pacote Node dentro de uma sandbox de arquivos — com o humano no loop e uma
-ferramenta de sua autoria.
+Implementar um agente em loop que cumpre a missão descrita em
+[`06-agente-arquivos/missao.md`](../06-agente-arquivos/missao.md): criar,
+dentro da sandbox `workspace/`, três arquivos que formam o esqueleto de um
+pacote Node. O agente deve operar com supervisão humana (gate de aprovação
+nas escritas) e usar uma ferramenta adicional implementada por você.
 
-Ponto de partida: [`06-agente-arquivos/`](../06-agente-arquivos/)
-(`agente.mjs` com TODOs, `tools.mjs` pronto, `missao.md`, `verificar.mjs`).
+Ponto de partida: [`06-agente-arquivos/`](../06-agente-arquivos/) —
+`agente.mjs` (esqueleto com TODOs 1 a 4), `tools.mjs` (ferramentas prontas),
+`missao.md` (objetivo do agente) e `verificar.mjs` (verificação automática).
 
-## 2. Ciclo de laboratório
+## 2. Resultado esperado
 
-Siga o ciclo da disciplina (roteiro de laboratórios) e registre cada passo no
-relatório:
+Ao final, a sequência abaixo deve funcionar no seu ambiente:
 
-1. **Problema** — a missão de `missao.md`.
-2. **Hipótese** — como o loop deve resolvê-la (quantos passos você espera? que tools em que ordem?).
-3. **Preparação** — ambiente da aula 03 funcionando (`npm run 01`).
-4. **Construção** — Partes 1 e 2 abaixo.
-5. **Execução** — `npm run agente` (guarde o trace!).
-6. **Observação** — o trace: o agente seguiu sua hipótese?
-7. **Verificação** — `npm run verificar` → `MISSÃO CUMPRIDA ✅`.
-8. **Explicação** — por que cada critério passou; o que causou desvios.
-9. **Retirada** — o que desse loop você reescreve do zero, sem assistente?
-10. **Registro** — o `relatorio.md` (Parte 3).
+```bash
+npm run agente      # o agente executa a missão, pedindo aprovação nas escritas
+npm run verificar   # todos os critérios passam
+```
 
-## 3. Parte 1 — Núcleo
+**Estado final da sandbox** (conteúdo mínimo):
 
-Complete os TODOs 1..4 de `agente.mjs`:
+```
+workspace/
+├── package.json      # name "workspace-demo" + scripts.test
+├── README.md         # contém a seção "## Como usar"
+└── src/
+    └── index.mjs     # exporta saudacao(nome) → "Olá, <nome>!"
+```
 
-- **TODO 1** — parada por limite (`MAX_PASSOS`). Sem ela o loop roda pra sempre.
-- **TODO 2** — dispatch: executar `executores[nome](argumentos)`, tracear no
-  formato `[passo N] nome(args) -> resultado`, devolver o tool result.
-- **TODO 3** — tratamento de `finalizar` → estado `sucesso`.
-- **TODO 4** — tool que falha vira observação (`ERRO: ...` como tool result),
-  nunca crash.
+**Exemplo ilustrativo de trace** (os passos reais variam conforme as decisões
+do modelo; o seu trace deve ter esta forma e conter ao menos uma intervenção):
 
-**Pronto quando:** `npm run verificar` imprime `MISSÃO CUMPRIDA ✅` (exit 0).
+```
+[passo 1] listar({"caminho":"."}) -> (vazio)
+[passo 2] escrever({"caminho":"package.json", ...}) -> ok: package.json (158 caracteres)
 
-## 4. Parte 2 — Extensões obrigatórias
+⚠️  o agente quer escrever "README.md" (61 caracteres):
+   | # workspace-demo
+   | Projeto de demonstração.
+aprovar? (s/n) n
+motivo da recusa: falta a seção Como usar
+[passo 3] [INTERVENÇÃO] escrita negada: falta a seção Como usar
+[passo 4] escrever({"caminho":"README.md", ...}) -> ok: README.md (129 caracteres)
+[passo 5] escrever({"caminho":"src/index.mjs", ...}) -> ok: src/index.mjs (88 caracteres)
+[passo 6] finalizar: arquivos criados conforme a missão
 
-**(a) Gate HITL na tool `escrever`.** Modelo de referência: degrau 07
-(`07-hitl.mjs`). Antes de toda escrita: mostrar caminho + prévia do conteúdo,
-pedir aprovação no terminal; recusa exige motivo e vira tool result
-`NEGADO pelo humano: <motivo>`, marcada no trace como `[INTERVENÇÃO]`.
-**O trace entregue deve conter pelo menos UMA intervenção real** (uma recusa
-com motivo e a reação do agente a ela).
+== FIM: sucesso em 6 passo(s) ==
+```
 
-**(b) Uma tool nova de autoria própria** em `tools.mjs`: schema JSON
-(name/description/parameters com `required`), validação de argumentos no
-executor e uso efetivo pelo agente. Sugestões (escolha uma ou proponha):
-`renomear(de, para)`, `apagar(caminho)` (com gate!), `contarPalavras(caminho)`,
-`buscarTexto(caminho, termo)`. Se quiser que a missão exija sua tool,
-crie um `missao-extra.md` e documente.
+**Saída esperada da verificação:**
 
-## 5. Parte 3 — Registro (`relatorio.md`)
+```
+PASS package.json válido com name e scripts.test
+PASS README.md com seção '## Como usar'
+PASS src/index.mjs exporta saudacao() correta
 
-Curto e denso (1–3 páginas):
+MISSÃO CUMPRIDA ✅
+```
 
-1. **Trace comentado** — o trace completo da execução final, com anotações:
-   onde o agente decidiu bem/mal, onde houve `[INTERVENÇÃO]` e como ele
-   reagiu, qual estado final e por quê.
-2. **Decisão da tool nova** — qual, por quê, schema escolhido, validação
-   implementada, exemplo de uso no trace.
-3. **Retirada** — 3 a 5 frases: o que do loop você sabe escrever do zero;
-   o que ainda depende de consulta.
+## 3. Tarefas
 
-## 6. Entrega
+### Parte 1 — Completar o loop (núcleo)
 
-Repositório (ou zip) contendo:
+Em `agente.mjs`, implemente os quatro TODOs:
 
-- `agente.mjs` e `tools.mjs` modificados (+ `missao-extra.md`, se houver);
-- `trace.txt` — saída completa da execução final;
-- saída de `npm run verificar` (no fim do trace ou em arquivo separado);
-- `relatorio.md`.
+1. **TODO 1** — parada por limite: encerrar com estado `limite` quando
+   `passo > MAX_PASSOS`.
+2. **TODO 2** — dispatch: interpretar cada `tool_call` (parse dos argumentos),
+   executar `executores[nome](argumentos)`, registrar a linha de trace
+   `[passo N] nome(args) -> resultado` e devolver o resultado como mensagem
+   `role: "tool"`.
+3. **TODO 3** — tratamento de `finalizar`: registrar o resumo e encerrar com
+   estado `sucesso`.
+4. **TODO 4** — falha de ferramenta: capturar exceções do executor e devolver
+   `ERRO: <mensagem>` como resultado da ferramenta, sem encerrar o programa.
 
-Python é permitido (ver [`python/README.md`](../python/README.md)) — mas
-`06_agente_arquivos.py` é só referência de estrutura: **copiá-lo não cumpre
-as extensões**, que são de autoria sua.
+Critério de conclusão desta parte: `npm run verificar` com todos os critérios
+em PASS.
 
-## 7. Critérios de avaliação
+### Parte 2 — Extensões
+
+**(a) Gate de aprovação (HITL) na ferramenta `escrever`.** Referência de
+implementação: [`07-hitl.mjs`](../07-hitl.mjs). Antes de cada escrita, o
+programa exibe caminho e prévia do conteúdo e pede confirmação no terminal.
+Recusa exige um motivo, que é devolvido ao modelo como resultado da ferramenta
+(`NEGADO pelo humano: <motivo>`) e registrado no trace como `[INTERVENÇÃO]`.
+O trace entregue deve conter **pelo menos uma recusa real**, com a reação do
+agente nos passos seguintes.
+
+**(b) Uma ferramenta nova, de sua autoria,** em `tools.mjs`: declaração com
+schema JSON (`name`, `description`, `parameters` com `required`), validação de
+argumentos no executor e uso efetivo pelo agente em execução. Exemplos de
+escopo adequado: `renomear(de, para)`, `apagar(caminho)` (com gate),
+`contarPalavras(caminho)`, `buscarTexto(caminho, termo)`. Caso a missão
+original não exercite sua ferramenta, descreva uma missão complementar em
+`missao-extra.md`.
+
+### Parte 3 — Relatório (`relatorio.md`)
+
+Documento de 1 a 3 páginas contendo:
+
+1. **Trace comentado** — o trace completo da execução final, com anotações
+   sobre as decisões do agente, a intervenção registrada e o estado final.
+2. **Ferramenta nova** — qual foi implementada, justificativa, schema adotado
+   e validação realizada, com o trecho do trace em que ela é usada.
+3. **Autonomia** — 3 a 5 frases: o que do loop você é capaz de reescrever sem
+   assistência e o que ainda exige consulta.
+
+## 4. Entrega
+
+Repositório ou arquivo compactado contendo:
+
+| Item | Conteúdo |
+|---|---|
+| `agente.mjs`, `tools.mjs` | código com os TODOs resolvidos e as extensões (+ `missao-extra.md`, se houver) |
+| `trace.txt` | saída completa da execução final, incluindo a intervenção |
+| `verificacao.txt` | saída de `npm run verificar` (ou incluída ao final do trace) |
+| `relatorio.md` | relatório da Parte 3 |
+
+A implementação em Python é aceita (ver
+[`python/README.md`](../python/README.md)). O arquivo
+`06_agente_arquivos.py` serve apenas como referência de estrutura do núcleo:
+as extensões da Parte 2 devem ser implementação sua.
+
+## 5. Avaliação
 
 | Critério | Peso |
 |---|---|
-| Núcleo funciona: TODOs corretos e `verificar` passando | 40% |
-| Extensão HITL com pelo menos 1 intervenção real no trace | 20% |
-| Tool própria: schema correto, validação, uso efetivo | 20% |
-| Relatório: trace comentado, decisões e retirada | 20% |
+| Núcleo: TODOs corretos e verificação com todos os critérios em PASS | 40% |
+| Gate HITL com pelo menos uma intervenção real registrada no trace | 20% |
+| Ferramenta própria: schema correto, validação e uso efetivo | 20% |
+| Relatório: trace comentado, justificativas e autonomia | 20% |
 
-**Anti-critério:** trace inventado, editado ou verificador adulterado =
-atividade **zerada** (honestidade de evidência é regra da disciplina —
-`AGENTS.md`). Uso de assistente de IA: permitido como apoio, mas a retirada
-é sua e o professor pode arguir qualquer linha do código na aula seguinte.
+Trace forjado, editado ou verificador alterado invalida a atividade
+(honestidade de evidência é regra da disciplina). O uso de assistentes de IA
+é permitido como apoio; a análise de autonomia é individual e o professor pode arguir
+qualquer trecho do código na aula seguinte.
 
-## 8. Dicas e socorro
+## 6. Material de apoio
 
 - Erros comuns e soluções: [`material-apoio.md`](material-apoio.md), seção 7
-  (rate limit 429, `arguments` inválido, loop infinito, sandbox).
-- Erro "mensagem de tool_call sem resposta": você esqueceu o push do tool
-  result — TODA `tool_call_id` precisa de uma mensagem `role: "tool"`.
-- Modelo ignorando as tools: reforce o system prompt; no Ollama 7B isso é
-  esperado — o loop reorienta.
-- Dúvidas: fórum da disciplina (perguntas com trace anexado têm prioridade).
+  (limite de requisições, argumentos inválidos, loop sem parada, sandbox).
+- Erro "mensagem de tool_call sem resposta": toda `tool_call_id` exige uma
+  mensagem `role: "tool"` correspondente — verifique o TODO 2.
+- Modelo respondendo texto em vez de usar as ferramentas: reforce a instrução
+  no system prompt; com modelos locais pequenos esse comportamento é
+  frequente e o loop já reorienta.
+- Dúvidas: fórum da disciplina, preferencialmente com o trace anexado.
