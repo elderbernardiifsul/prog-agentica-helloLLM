@@ -5,6 +5,7 @@
 # Rode: python3 06_agente_arquivos.py  (depois: cd .. && npm run verificar)
 import json
 import os
+import subprocess
 from pathlib import Path
 
 from dotenv import load_dotenv
@@ -46,7 +47,18 @@ def escrever(caminho, conteudo):
     return f"ok: {caminho} ({len(conteudo)} caracteres)"
 
 
-executores = {"listar": listar, "ler": ler, "escrever": escrever}
+def executar(comando):
+    # Roda comandos reais (cwd = sandbox). O cwd é convenção, não isolamento:
+    # na sua versão com HITL, o gate antes desta ferramenta é obrigatório.
+    RAIZ.mkdir(parents=True, exist_ok=True)
+    r = subprocess.run(comando, shell=True, cwd=RAIZ, capture_output=True, text=True, timeout=60)
+    partes = [r.stdout.strip()]
+    if r.stderr.strip():
+        partes.append(f"[stderr] {r.stderr.strip()}")
+    return "\n".join(p for p in partes if p) or "(sem saída)"
+
+
+executores = {"listar": listar, "ler": ler, "escrever": escrever, "executar": executar}
 
 defs = [
     {
@@ -88,6 +100,20 @@ defs = [
     {
         "type": "function",
         "function": {
+            "name": "executar",
+            "description": "Executa um comando de shell com diretório de trabalho na sandbox. "
+            "Use para instalar dependências (npm install) e rodar scripts (node hello.mjs). "
+            "Retorna stdout e stderr.",
+            "parameters": {
+                "type": "object",
+                "properties": {"comando": {"type": "string"}},
+                "required": ["comando"],
+            },
+        },
+    },
+    {
+        "type": "function",
+        "function": {
             "name": "finalizar",
             "description": "Declare a missão concluída, com um resumo do que foi feito. "
             "Só chame quando TODOS os critérios da missão estiverem prontos.",
@@ -106,9 +132,10 @@ missao = (Path(__file__).parent / ".." / "06-agente-arquivos" / "missao.md").rea
 messages = [
     {
         "role": "system",
-        "content": "Você é um agente que cumpre missões manipulando arquivos numa sandbox, "
-        "usando as tools listar, ler, escrever e finalizar. Trabalhe passo a passo. "
-        "Chame finalizar SOMENTE quando todos os critérios da missão estiverem prontos.",
+        "content": "Você é um agente que cumpre missões numa sandbox de arquivos, usando "
+        "as tools listar, ler, escrever, executar e finalizar. Trabalhe passo a passo "
+        "e colete evidências do que fizer. Chame finalizar SOMENTE quando os critérios "
+        "obrigatórios da missão estiverem prontos.",
     },
     {"role": "user", "content": missao},
 ]

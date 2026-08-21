@@ -1,9 +1,11 @@
 // ATIVIDADE EaD — agente de arquivos. Enunciado completo:
 // docs/atividade-ead-agente-arquivos.md
 // Parte 1 (núcleo): complete os TODOs 1..4 até `npm run verificar` passar.
-// Parte 2 (extensões): (a) gate HITL na tool escrever (modelo no degrau 07);
-//   (b) crie UMA tool nova sua em tools.mjs (schema + executor) e faça a
-//   missão usá-la — documente a escolha no relatório.
+// Parte 2 (extensões): (a) gate HITL nas tools escrever e executar (modelo
+//   no degrau 07 — executar roda comandos reais: gate obrigatório);
+//   (b) crie UMA tool nova sua em tools.mjs (uma tool é somente uma função
+//   + o schema que a descreve ao modelo) e faça a missão usá-la —
+//   documente a escolha no relatório.
 // Sem o TODO 1 o loop roda pra sempre — Ctrl+C encerra.
 // Rode com: npm run agente
 import OpenAI from "openai";
@@ -23,9 +25,10 @@ const messages = [
   {
     role: "system",
     content:
-      "Você é um agente que cumpre missões manipulando arquivos numa sandbox, " +
-      "usando as tools listar, ler, escrever e finalizar. Trabalhe passo a passo. " +
-      "Chame finalizar SOMENTE quando todos os critérios da missão estiverem prontos.",
+      "Você é um agente que cumpre missões numa sandbox de arquivos, usando " +
+      "as tools listar, ler, escrever, executar e finalizar. Trabalhe passo " +
+      "a passo e colete evidências do que fizer. Chame finalizar SOMENTE " +
+      "quando os critérios obrigatórios da missão estiverem prontos.",
   },
   { role: "user", content: missao },
 ];

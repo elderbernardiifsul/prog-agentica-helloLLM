@@ -61,7 +61,7 @@ quizzes/resumos — citações apontam a fonte exata.
 | [`docs/slides-aula-03.pdf`](docs/slides-aula-03.pdf) | Slides da aula (também em [HTML](docs/slides-aula-03.html)) |
 | [`docs/material-apoio.md`](docs/material-apoio.md) | Aprofundamento por degrau + troubleshooting (erros comuns e soluções) |
 | [`docs/guia-preparacao.md`](docs/guia-preparacao.md) | Setup completo (chave, Node, Ollama) — fazer ANTES da aula |
-| [`docs/atividade-ead-agente-arquivos.md`](docs/atividade-ead-agente-arquivos.md) | Enunciado da atividade EaD (prazo: 2 semanas) |
+| [`docs/atividade-ead-agente-arquivos.md`](docs/atividade-ead-agente-arquivos.md) | Enunciado da atividade EaD (prazo: 2 aulas) |
 | `.env.example` | Modelo de configuração — copie para `.env` (que é ignorado pelo git) |
 
 ## Nota sobre produção com IA generativa

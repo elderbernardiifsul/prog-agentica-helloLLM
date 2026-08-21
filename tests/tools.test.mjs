@@ -3,9 +3,15 @@ import assert from "node:assert/strict";
 import fs from "node:fs/promises";
 import { defs, executores } from "../06-agente-arquivos/tools.mjs";
 
-test("defs declara as 4 tools", () => {
+test("defs declara as 5 tools", () => {
   const nomes = defs.map((d) => d.function.name).sort();
-  assert.deepEqual(nomes, ["escrever", "finalizar", "ler", "listar"]);
+  assert.deepEqual(nomes, ["escrever", "executar", "finalizar", "ler", "listar"]);
+});
+
+test("executar roda comando com cwd na sandbox", async () => {
+  const saida = await executores.executar({ comando: "pwd && echo ola" });
+  assert.match(saida, /workspace/);
+  assert.match(saida, /ola/);
 });
 
 test("escreve e lê dentro da sandbox", async () => {
