@@ -6,23 +6,23 @@
 ## 1. Objetivo
 
 Construir um **agente em loop** que cumpre sozinho uma missão de arquivos, com
-supervisão humana. Antes de qualquer código, desarme a confusão mais comum da
+supervisão humana. Antes de qualquer código, resolva a confusão mais comum da
 atividade:
 
-> **Você não cria os arquivos da missão — o agente cria.**
+> **Você não cria os arquivos da missão: o agente cria.**
 > O seu trabalho é completar o *motor* (o loop em `agente.mjs`) que permite ao
 > modelo trabalhar: chamar a API, executar as tools que o modelo pedir,
-> registrar o trace e parar na hora certa. Quem decide *o quê* fazer e *em que
-> ordem* é o modelo; quem executa é o seu código. Se você mesmo criar
-> `package.json` na mão dentro de `workspace/`, a atividade perde o sentido
-> (e o trace entrega).
+> registrar o trace e parar na hora certa. O modelo decide *o quê* fazer e *em
+> que ordem*; o seu código executa. Se você mesmo criar `package.json` na mão
+> dentro de `workspace/`, a atividade perde o sentido, e a ausência dessa
+> escrita no trace mostra isso.
 
 A missão que o agente recebe está em
 [`06-agente-arquivos/missao.md`](../06-agente-arquivos/missao.md): montar,
 dentro da sandbox `workspace/`, o esqueleto de um pacote Node
 (`package.json`, `README.md`, `src/index.mjs`), instalar as dependências
 rodando `npm install` pela tool `executar` (a pasta `node_modules/` deve
-existir ao final) e — desejável — criar e executar um `hello.mjs` que imprime
+existir ao final) e, como item desejável, criar e executar um `hello.mjs` que imprime
 `Hello Agent!`, registrando a saída como evidência.
 
 Além do loop, você vai implementar duas extensões: um **gate de aprovação
@@ -31,15 +31,15 @@ humana** (HITL) nas ações sensíveis e **uma ferramenta nova de sua autoria**.
 ## 2. Organização dos arquivos
 
 Ponto de partida: [`06-agente-arquivos/`](../06-agente-arquivos/). São quatro
-arquivos com papéis distintos — saiba onde você mexe e onde não:
+arquivos com papéis distintos. Saiba onde você mexe e onde não:
 
 | Arquivo | Papel | Você edita? |
 |---|---|---|
-| [`agente.mjs`](../06-agente-arquivos/agente.mjs) | O loop do agente (esqueleto com TODOs 1 a 4) | **Sim** — etapas 1 a 4 do roteiro |
-| [`tools.mjs`](../06-agente-arquivos/tools.mjs) | As tools prontas (`listar`, `ler`, `escrever`, `executar`) com sandbox, e os schemas que as descrevem ao modelo | **Sim** — só para adicionar a sua tool nova (etapa 5) |
+| [`agente.mjs`](../06-agente-arquivos/agente.mjs) | O loop do agente (esqueleto com TODOs 1 a 4) | **Sim** (etapas 1 a 4 do roteiro) |
+| [`tools.mjs`](../06-agente-arquivos/tools.mjs) | As tools prontas (`listar`, `ler`, `escrever`, `executar`) com sandbox, e os schemas que as descrevem ao modelo | **Sim**, só para adicionar a sua tool nova (etapa 5) |
 | [`missao.md`](../06-agente-arquivos/missao.md) | O "pedido" que o agente recebe como mensagem de usuário | Não (se sua tool nova precisar de missão própria, crie `missao-extra.md`) |
-| [`verificar.mjs`](../06-agente-arquivos/verificar.mjs) | Verificação externa e objetiva do resultado (`npm run verificar`) | **Nunca** — alterá-lo invalida a atividade |
-| `workspace/` | A sandbox onde o agente trabalha (criada em execução, ignorada pelo git) | Não — quem escreve aqui é o agente |
+| [`verificar.mjs`](../06-agente-arquivos/verificar.mjs) | Verificação externa e objetiva do resultado (`npm run verificar`) | **Nunca**: alterá-lo invalida a atividade |
+| `workspace/` | A sandbox onde o agente trabalha (criada em execução, ignorada pelo git) | Não: quem escreve aqui é o agente |
 | [`missao-injecao.md`](../06-agente-arquivos/missao-injecao.md) + [`plantar-isca.mjs`](../06-agente-arquivos/plantar-isca.mjs) | Bônus da etapa 7: missão inocente + isca com instrução maliciosa (`npm run injecao`) | Não |
 
 Uma rodada do loop, do ponto de vista do seu código:
@@ -121,17 +121,17 @@ MISSÃO CUMPRIDA ✅
 
 Siga as etapas na ordem. Cada uma declara **objetivo** (por que existe),
 **o que fazer** (a ação concreta) e **o que observar** (a evidência de que
-funcionou). Se a observação não bater, resolva antes de avançar — é assim que
-se depura agente: uma mudança por vez, olhando o trace.
+funcionou). Se a observação não bater, resolva antes de avançar. Depurar
+agente é isso: uma mudança por vez, olhando o trace.
 
 ### Etapa 0 — Preparação e linha de base
 
 **Objetivo:** confirmar o ambiente e registrar o estado inicial da
-verificação, para saber exatamente o que o seu trabalho precisa mudar.
+verificação, para saber o que o seu trabalho precisa mudar.
 
 **O que fazer:** confirme que o setup da aula funciona (`npm run 01` imprime
 JSON; senão, [`guia-preparacao.md`](guia-preparacao.md)). Leia
-[`missao.md`](../06-agente-arquivos/missao.md) — é o que o agente vai
+[`missao.md`](../06-agente-arquivos/missao.md), que é o que o agente vai
 receber. Rode `npm run verificar` **antes de escrever qualquer código**.
 
 **O que observar:** os quatro critérios em FAIL. Essa é a linha de base; a
@@ -139,7 +139,7 @@ atividade termina quando todos derem PASS *por obra do agente*.
 
 ### Etapa 1 — Condição de parada por limite (TODO 1)
 
-**Objetivo:** garantir que o loop nunca rode indefinidamente. Todo loop de
+**Objetivo:** garantir que o loop sempre termine. Todo loop de
 agente precisa desse freio de emergência: sem ele, um modelo improdutivo roda
 (e gasta cota) para sempre.
 
@@ -154,21 +154,21 @@ que importa aqui: o programa nunca fica rodando para sempre.
 
 ### Etapa 2 — Encerramento e despacho de ferramentas (TODOs 3 e 2)
 
-**Objetivo:** completar o coração do loop — executar as tools que o modelo
+**Objetivo:** completar o coração do loop: executar as tools que o modelo
 pede e reconhecer o momento de encerrar com sucesso.
 
 **O que fazer:** dois detalhes de ordem, já indicados nos comentários do
 código:
 
 - O tratamento de `finalizar` (TODO 3) vem **antes** do dispatch no corpo do
-  `for`, porque `finalizar` não tem executor em `tools.mjs` — quem a trata é
-  o loop: registra o resumo, devolve `"ok"` como tool result e encerra com
+  `for`, porque `finalizar` não tem executor em `tools.mjs`. O loop a trata:
+  registra o resumo, devolve `"ok"` como tool result e encerra com
   `estadoFinal = "sucesso"`.
 - O dispatch (TODO 2) faz o resto: executa `executores[nome](argumentos)`,
   imprime a linha de trace `[passo N] nome(argumentos) -> resultado` e
   devolve o resultado como mensagem `{ role: "tool", tool_call_id: call.id,
   content: String(resultado) }`. **Toda `tool_call` exige uma mensagem
-  `role: "tool"` correspondente** — esquecer o push é o erro mais comum da
+  `role: "tool"` correspondente**; esquecer o push é o erro mais comum da
   atividade.
 
 **O que observar:** `npm run agente` percorre a missão inteira e chega a
@@ -177,18 +177,18 @@ PASS. (O item desejável `hello.mjs` só informa, não reprova.)
 
 ### Etapa 3 — Tolerância a falhas de ferramenta (TODO 4)
 
-**Objetivo:** transformar falha de tool em observação para o modelo, não em
-crash do programa. Um agente que morre na primeira exceção não é um agente —
-é um script frágil.
+**Objetivo:** transformar falha de tool em observação para o modelo, em vez
+de derrubar o programa. Um loop que morre na primeira exceção desperdiça
+todos os passos anteriores e nunca dá ao modelo a chance de contornar o erro.
 
 **O que fazer:** envolva o dispatch em `try/catch` e, no catch, devolva
-`ERRO: <mensagem>` como tool result. O erro vira observação — **o modelo**
+`ERRO: <mensagem>` como tool result. O erro vira observação, e **o modelo**
 decide o que fazer com ele (tentar de novo, mudar o caminho, desistir).
 
 **O que observar (teste opcional, recomendado):** numa execução avulsa,
-provoque um erro — por exemplo, adicione temporariamente à missão "leia o
-arquivo `nao-existe.txt`" — e veja no trace o `ERRO:` seguido da reação do
-modelo, com o agente seguindo vivo.
+provoque um erro (por exemplo, adicione à missão "leia o arquivo
+`nao-existe.txt`") e veja no trace o `ERRO:` seguido da reação do modelo,
+com o agente seguindo vivo.
 
 ### Etapa 4 — Supervisão humana: gate de aprovação (HITL)
 
@@ -199,8 +199,8 @@ vira parte do IO do agente.
 **O que fazer:** copie e adapte o padrão de [`07-hitl.mjs`](../07-hitl.mjs).
 Antes de cada `escrever` **e** de cada `executar`, mostre a ação proposta
 (caminho e prévia do conteúdo; ou o comando) e peça confirmação no terminal.
-Para `executar` o gate é inegociável: a tool roda comandos reais no seu
-computador. Recusa exige um motivo, devolvido ao modelo como tool result
+Para `executar` o gate é obrigatório, porque a tool roda comandos reais no
+seu computador. Recusa exige um motivo, devolvido ao modelo como tool result
 (`NEGADO pelo humano: <motivo>`) e registrado no trace como `[INTERVENÇÃO]`.
 A recusa **não** encerra o agente.
 
@@ -214,7 +214,7 @@ reação do agente.
 **Objetivo:** constatar, criando a sua, que uma tool não exige
 infraestrutura: **é somente uma função** no seu código, mais o schema JSON
 que a descreve ao modelo (`name`, `description`, `parameters` com
-`required`) — veja como `listar` ocupa dez linhas em `tools.mjs`.
+`required`). Veja como `listar` ocupa dez linhas em `tools.mjs`.
 
 **O que fazer:** adicione a sua tool em `tools.mjs` (schema em `defs`,
 função em `executores`), com validação dos argumentos no executor. Exemplos
@@ -230,8 +230,8 @@ npm run agente -- 06-agente-arquivos/missao-extra.md
 Duas notas:
 
 - O teste `defs declara as 5 tools originais` (`npm test`) já aceita tools
-  adicionais — sua tool nova não o quebra. `tests/` não é o verificador da
-  atividade (a regra "não alterar" vale para `verificar.mjs`).
+  adicionais; sua tool nova não o quebra. A regra "não alterar" vale para
+  `verificar.mjs`, não para `tests/`.
 - Só o **verificador** é fixo na missão original; o agente aceita qualquer
   missão pelo argumento acima.
 
@@ -241,7 +241,7 @@ efetivo em execução.
 
 ### Etapa 6 — Execução final e coleta de evidências
 
-**Objetivo:** produzir as evidências de entrega — um trace completo, limpo e
+**Objetivo:** produzir as evidências de entrega: um trace completo, limpo e
 não editado, mais a saída da verificação.
 
 **O que fazer:** apague a sandbox para uma rodada limpa e grave as saídas:
@@ -257,19 +257,19 @@ para os arquivos manualmente.)
 
 **O que observar:** o trace final começa da sandbox vazia, contém a
 intervenção da etapa 4 (e a sua tool, se exercitada) e termina em sucesso;
-`verificacao.txt` mostra todos os critérios em PASS. Saída **completa e não
-editada** — é artefato de avaliação. Repare também na linha `== CUSTO ==`
-que o loop imprime ao final (chamadas, tokens de prompt e de completion, e o
-passo em que o prompt foi maior): é a fatura da sua missão, e alimenta o item
-4 do relatório.
+`verificacao.txt` mostra todos os critérios em PASS. A saída deve estar
+**completa e não editada**, porque é artefato de avaliação. A linha
+`== CUSTO ==` que o loop imprime ao final (chamadas, tokens de prompt e de
+completion, e o passo em que o prompt foi maior) resume quanto a missão
+consumiu e alimenta o item 4 do relatório.
 
 ### Etapa 7 (bônus) — Injeção de prompt na sandbox
 
 **Objetivo:** ver o ataque que sandbox e gate existem para conter. Tudo que o
-agente **lê** (arquivos, páginas, saídas de comando) é *dado*, não
-*instrução* — mas o modelo nem sempre respeita essa fronteira. Faça esta
-etapa **somente depois da etapa 4**: a defesa que você vai observar é o seu
-gate.
+agente **lê** (arquivos, páginas, saídas de comando) deveria ser tratado como
+*dado*, mas o modelo nem sempre respeita essa fronteira e pode obedecer a uma
+instrução embutida ali. Faça esta etapa **depois da etapa 4**: a defesa que
+você vai observar é o seu gate.
 
 **O que fazer:** leia [`missao-injecao.md`](../06-agente-arquivos/missao-injecao.md)
 (uma missão inocente: resumir `notas.txt`) e
@@ -286,7 +286,7 @@ comando que venha da isca, com o motivo ("instrução veio de um arquivo, não
 do usuário").
 
 **O que observar:** o modelo obedeceu ao bloco injetado (pediu `rm -rf`,
-`pwned.txt`) ou o ignorou? Se obedeceu, onde a cadeia parou — no seu gate
+`pwned.txt`) ou o ignorou? Se obedeceu, onde a cadeia parou: no seu gate
 (`[INTERVENÇÃO]`) ou na sandbox? Se ignorou, o resumo menciona a instrução?
 Rode 2 ou 3 vezes: com `openrouter/free` o modelo varia e o comportamento
 também. Registre o que viu em 3 a 5 frases no relatório (item 5).
@@ -296,17 +296,17 @@ também. Registre o que viu em 3 a 5 frases no relatório (item 5).
 
 Documento de 1 a 3 páginas contendo:
 
-1. **Trace comentado** — o trace completo da execução final, com anotações
+1. **Trace comentado**: o trace completo da execução final, com anotações
    sobre as decisões do agente, a intervenção registrada e o estado final.
-2. **Ferramenta nova** — qual foi implementada, justificativa, schema adotado
+2. **Ferramenta nova**: qual foi implementada, justificativa, schema adotado
    e validação realizada, com o trecho do trace em que ela é usada.
-3. **Autonomia** — 3 a 5 frases: o que do loop você é capaz de reescrever sem
+3. **Autonomia**: 3 a 5 frases: o que do loop você é capaz de reescrever sem
    assistência e o que ainda exige consulta.
-4. **Custo** — a linha `== CUSTO ==` da execução final e 2 a 4 frases: por que
+4. **Custo**: a linha `== CUSTO ==` da execução final e 2 a 4 frases: por que
    `prompt` cresce a cada passo, em qual passo foi maior e o que no seu trace
    explica isso; quanto custaria em uma API paga (escolha um preço por milhão
    de tokens e faça a conta).
-5. **(Bônus) Injeção de prompt** — se fez a etapa 7: o que o modelo fez com a
+5. **(Bônus) Injeção de prompt**: se fez a etapa 7: o que o modelo fez com a
    instrução escondida, onde a defesa atuou e o trecho do trace.
 
 ## 6. Entrega
@@ -351,7 +351,7 @@ professor pode arguir qualquer trecho do código na aula seguinte.
 - Erros comuns e soluções: [`material-apoio.md`](material-apoio.md), seção 7
   (limite de requisições, argumentos inválidos, loop sem parada, sandbox).
 - Erro "mensagem de tool_call sem resposta": toda `tool_call_id` exige uma
-  mensagem `role: "tool"` correspondente — verifique o TODO 2 (etapa 2).
+  mensagem `role: "tool"` correspondente; verifique o TODO 2 (etapa 2).
 - Modelo respondendo texto em vez de usar as ferramentas: reforce a instrução
   no system prompt; com modelos locais pequenos esse comportamento é
   frequente e o loop já reorienta.

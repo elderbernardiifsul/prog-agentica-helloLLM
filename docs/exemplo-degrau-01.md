@@ -1,6 +1,6 @@
 # Exemplo resolvido — Degrau 01 (wire format)
 
-Este documento resolve o degrau 01 de ponta a ponta — objetivo, leitura do
+Este documento resolve o degrau 01 de ponta a ponta: objetivo, leitura do
 código, execução, saída anotada e observações. Ele é o **modelo do método de
 estudo**: replique estes mesmos passos em todos os outros degraus.
 
@@ -29,13 +29,13 @@ na saída.
 O arquivo tem ~40 linhas e nenhum SDK. Localize as três peças que o objetivo
 anuncia:
 
-1. **O corpo da requisição** — `corpo = { model, messages }`, onde `messages`
+1. **O corpo da requisição:** `corpo = { model, messages }`, onde `messages`
    é uma lista de mensagens com papéis (`system` define as regras, `user` faz
    o pedido).
-2. **A chamada HTTP** — um `fetch` comum: `POST {BASE_URL}/chat/completions`,
-   header `Authorization: Bearer <chave>`, corpo em JSON. É *tudo* que existe
+2. **A chamada HTTP:** um `fetch` comum: `POST {BASE_URL}/chat/completions`,
+   header `Authorization: Bearer <chave>`, corpo em JSON. É tudo que existe
    entre você e o modelo.
-3. **A leitura da resposta** — `json.choices[0].message.content`,
+3. **A leitura da resposta:** `json.choices[0].message.content`,
    `finish_reason` e `usage`.
 
 ## 3. Execute
@@ -46,7 +46,7 @@ npm run 01
 
 ## 4. Saída anotada
 
-Saída **ilustrativa** — a sua terá texto e números diferentes (o modelo é
+Saída **ilustrativa**. A sua terá texto e números diferentes (o modelo é
 não determinístico, e provedores podem incluir campos extras):
 
 ```
@@ -82,28 +82,28 @@ Volte ao cabeçalho e marque cada item contra a sua saída real:
 
 - [ ] O JSON completo apareceu, com `choices` e `usage`.
 - [ ] A resposta está em `choices[0].message.content`, com `role: "assistant"`.
-- [ ] `finish_reason` é `"stop"` — o modelo terminou por conta própria
+- [ ] `finish_reason` é `"stop"`: o modelo terminou por conta própria
   (os outros valores importantes, `"tool_calls"` e `"length"`, aparecem nos
-  degraus 04 em diante — ver [`material-apoio.md`](material-apoio.md), §1).
+  degraus 04 em diante; ver [`material-apoio.md`](material-apoio.md), §1).
 - [ ] `usage` mostra o custo em tokens: `prompt_tokens` (entrada) e
-  `completion_tokens` (saída). Em APIs pagas, cada um tem preço. Não estranhe
-  se `total_tokens` for maior que a soma dos dois: modelos com raciocínio
-  contam também os tokens de "pensamento"
+  `completion_tokens` (saída). Em APIs pagas, cada um tem preço. Se
+  `total_tokens` for maior que a soma dos dois, é porque modelos com
+  raciocínio contam também os tokens de "pensamento"
   (`completion_tokens_details.reasoning_tokens`).
 
-Se todos os itens bateram, o degrau está compreendido — não há mais nada
-"escondido": toda a comunicação com um LLM é essa requisição e essa resposta.
+Se todos os itens bateram, você compreendeu o degrau: toda a comunicação
+com um LLM é essa requisição e essa resposta.
 
 ## 6. Experimente (opcional, recomendado)
 
 Pequenas mutações consolidam o conceito. Uma por vez, rodando entre cada uma:
 
-- **Mude a pergunta** no `role: "user"` — observe `usage` variar com o
+- **Mude a pergunta** no `role: "user"` e observe `usage` variar com o
   tamanho do texto.
 - **Mude a regra** no `role: "system"` (ex.: "responda em inglês, em tom
-  formal") — observe o efeito na resposta sem tocar na pergunta.
-- **Provoque um erro**: troque um caractere da chave no `.env` e rode —
-  observe o `HTTP 401` e aprenda a ler a mensagem de erro. Desfaça em
+  formal") e observe o efeito na resposta sem tocar na pergunta.
+- **Provoque um erro**: troque um caractere da chave no `.env`, rode e
+  observe o `HTTP 401`. Aprenda a ler a mensagem de erro e desfaça em
   seguida.
 
 ## 7. Registre
@@ -114,7 +114,7 @@ entrega nos degraus 05 e 06 (o trace da atividade).
 
 ---
 
-**Próximo passo:** aplique o mesmo método ao degrau 02 — o cabeçalho de
+**Próximo passo:** aplique o mesmo método ao degrau 02. O cabeçalho de
 [`02-sdk-openai.mjs`](../02-sdk-openai.mjs) já diz o que fazer e o que
 observar. Aprofundamento de cada degrau:
 [`material-apoio.md`](material-apoio.md).

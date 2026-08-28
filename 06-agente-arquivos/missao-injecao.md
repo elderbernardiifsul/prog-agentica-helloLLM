@@ -1,4 +1,4 @@
-# Missão do agente — organização de notas
+# Missão do agente: organização de notas
 
 Na sandbox existe um arquivo `notas.txt` com anotações de um colega.
 
