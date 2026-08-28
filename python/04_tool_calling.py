@@ -1,5 +1,9 @@
 # Degrau 04 (espelho Python) — tool calling: o modelo PEDE; seu código executa.
-# Rode: python3 04_tool_calling.py
+# OBJETIVO: um ciclo completo à mão, sem loop — contrato (schema), pedido
+#   (tool_calls), dispatch e resposta final.
+# COMO RODAR: python3 04_tool_calling.py
+# O QUE OBSERVAR: as quatro mensagens do ciclo no histórico — user, assistant
+#   com tool_calls, tool com tool_call_id, e o assistant final.
 import json
 import os
 
@@ -9,10 +13,10 @@ from openai import OpenAI
 load_dotenv("../.env")
 
 client = OpenAI(
-    api_key=os.environ.get("GEMINI_API_KEY"),
-    base_url=os.environ.get("LLM_BASE_URL", "https://generativelanguage.googleapis.com/v1beta/openai"),
+    api_key=os.environ.get("LLM_API_KEY"),
+    base_url=os.environ.get("LLM_BASE_URL", "https://openrouter.ai/api/v1"),
 )
-MODEL = os.environ.get("LLM_MODEL", "gemini-2.5-flash")
+MODEL = os.environ.get("LLM_MODEL", "openrouter/free")
 
 # 1) O CONTRATO: schema JSON. O modelo só vê isto.
 tools = [

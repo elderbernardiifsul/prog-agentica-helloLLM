@@ -1,6 +1,8 @@
 # Degrau 05 (espelho Python, RESOLVIDO) — o primeiro agente em loop.
-# O mini-lab presencial é em Node; este espelho serve de consulta pós-lab.
-# Rode: python3 05_loop_jogo.py
+# O mini-lab é em Node; este espelho serve de consulta pós-lab.
+# COMO RODAR: python3 05_loop_jogo.py
+# O QUE OBSERVAR: o trace [passo N] e os três estados de parada (sucesso,
+#   limite, erro) já implementados — compare com os TODOs do degrau 05 em Node.
 import json
 import os
 import random
@@ -11,10 +13,10 @@ from openai import OpenAI
 load_dotenv("../.env")
 
 client = OpenAI(
-    api_key=os.environ.get("GEMINI_API_KEY"),
-    base_url=os.environ.get("LLM_BASE_URL", "https://generativelanguage.googleapis.com/v1beta/openai"),
+    api_key=os.environ.get("LLM_API_KEY"),
+    base_url=os.environ.get("LLM_BASE_URL", "https://openrouter.ai/api/v1"),
 )
-MODEL = os.environ.get("LLM_MODEL", "gemini-2.5-flash")
+MODEL = os.environ.get("LLM_MODEL", "openrouter/free")
 
 SECRETO = random.randint(1, 100)
 MAX_PASSOS = 10

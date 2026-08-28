@@ -1,12 +1,17 @@
-// Degrau 01 — uma API de LLM é só HTTP + JSON.
-// Rode: npm run 01   (ou: node --env-file=.env 01-fetch-cru.mjs)
+// Degrau 01 — o wire format: uma API de LLM é só HTTP + JSON.
+// OBJETIVO: ver a requisição e a resposta cruas, sem SDK — model, messages
+//   (com roles), choices, finish_reason e usage.
+// COMO RODAR: npm run 01   (ou: node --env-file=.env 01-fetch-cru.mjs)
+// O QUE OBSERVAR: o JSON completo da resposta e, em seguida, os três campos
+//   que importam — content, finish_reason ("stop") e usage (custo em tokens).
 
-const BASE_URL = process.env.LLM_BASE_URL ?? "https://generativelanguage.googleapis.com/v1beta/openai";
-const MODEL = process.env.LLM_MODEL ?? "gemini-2.5-flash";
-const API_KEY = process.env.GEMINI_API_KEY;
+const BASE_URL = process.env.LLM_BASE_URL ?? "https://openrouter.ai/api/v1";
+const MODEL = process.env.LLM_MODEL ?? "openrouter/free";
+const API_KEY = process.env.LLM_API_KEY;
 
-if (!API_KEY) {
-  console.error("Defina GEMINI_API_KEY no .env (copie de .env.example)");
+if (!API_KEY && !process.env.LLM_BASE_URL) {
+  // Com Ollama (LLM_BASE_URL local) não há chave; no OpenRouter ela é obrigatória.
+  console.error("Defina LLM_API_KEY no .env (copie de .env.example)");
   process.exit(1);
 }
 

@@ -1,21 +1,28 @@
 // Degrau 03b — VENDO a janela de contexto.
-// A API é STATELESS: a cada chamada o modelo enxerga SOMENTE o que este array
-// contém. "Janela de contexto" é o limite de tokens do que pode ser enviado
-// (mais a resposta). A do Gemini é enorme (~1M tokens) — então SIMULAMOS uma
-// janela pequena para ver o efeito na prática: o modelo ESQUECE.
-//
-// Roteiro de demonstração:
+// OBJETIVO: a API é STATELESS — a cada chamada o modelo enxerga SOMENTE o que
+//   este array contém. "Janela de contexto" é o limite de tokens do que pode
+//   ser enviado (mais a resposta). A do Gemini é enorme (~1M tokens), então
+//   SIMULAMOS uma janela pequena para ver o efeito na prática.
+// COMO RODAR: npm run 03b   (digite /sair para encerrar)
+// O QUE FAZER (roteiro de demonstração):
 //   1. "meu nome é <seu nome>"
-//   2. peça 2 ou 3 respostas longas (ex.: "explique HTTP em detalhes")
-//   3. "qual é meu nome?"  ->  depois do trimming, ele não sabe mais.
+//   2. peça TRÊS respostas longas (ex.: "explique HTTP em detalhes",
+//      "explique DNS em detalhes", "explique TCP em detalhes")
+//   3. "qual é meu nome?"
+// O QUE OBSERVAR: o painel "CONTEXTO QUE SERÁ ENVIADO" a cada turno e a
+//   tesoura ✂️ descartando as mensagens antigas. Detalhe importante: a
+//   RESPOSTA do modelo ("Prazer, <nome>!") também carrega o seu nome — ele
+//   só esquece quando TODAS as mensagens que citam o nome caírem da janela.
+//   Por isso o roteiro pede três respostas longas: com menos, alguma cópia
+//   do nome sobrevive ao corte e o modelo ainda "lembra".
 import OpenAI from "openai";
 import readline from "node:readline/promises";
 
 const client = new OpenAI({
-  apiKey: process.env.GEMINI_API_KEY,
-  baseURL: process.env.LLM_BASE_URL ?? "https://generativelanguage.googleapis.com/v1beta/openai",
+  apiKey: process.env.LLM_API_KEY ?? "ollama", // com Ollama não há chave; qualquer string serve
+  baseURL: process.env.LLM_BASE_URL ?? "https://openrouter.ai/api/v1",
 });
-const MODEL = process.env.LLM_MODEL ?? "gemini-2.5-flash";
+const MODEL = process.env.LLM_MODEL ?? "openrouter/free";
 
 const ORCAMENTO_PROMPT_TOKENS = 250; // nossa "janela" simulada
 
@@ -53,7 +60,15 @@ while (true) {
   historico.push({ role: "user", content: entrada });
   mostrarContexto(ultimoPromptTokens);
 
-  const resposta = await client.chat.completions.create({ model: MODEL, messages: historico });
+  let resposta;
+  try {
+    resposta = await client.chat.completions.create({ model: MODEL, messages: historico });
+  } catch (erro) {
+    // 429 (fila do free tier) e afins: informa, desfaz o turno e segue o chat.
+    console.error(`erro de API: ${erro.message} — espere alguns segundos e tente de novo\n`);
+    historico.pop();
+    continue;
+  }
   const msg = resposta.choices[0].message;
   historico.push(msg);
   ultimoPromptTokens = resposta.usage.prompt_tokens;

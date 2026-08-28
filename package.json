@@ -13,6 +13,7 @@
     "05": "node --env-file=.env 05-loop-jogo.mjs",
     "agente": "node --env-file=.env 06-agente-arquivos/agente.mjs",
     "verificar": "node 06-agente-arquivos/verificar.mjs",
+    "injecao": "node 06-agente-arquivos/plantar-isca.mjs && node --env-file=.env 06-agente-arquivos/agente.mjs 06-agente-arquivos/missao-injecao.md",
     "07": "node --env-file=.env 07-hitl.mjs",
     "test": "node --test"
   },

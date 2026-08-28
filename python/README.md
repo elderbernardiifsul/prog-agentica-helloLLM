@@ -22,7 +22,11 @@ Os scripts usam o mesmo `.env` da pasta pai (carregado com `python-dotenv`).
 | `05_loop_jogo.py` | `05-loop-jogo.mjs` — versão RESOLVIDA (consulta pós-lab) |
 | `06_agente_arquivos.py` | `06-agente-arquivos/` — agente resolvido SEM as extensões |
 
-**Atenção (atividade EaD em Python):** `06_agente_arquivos.py` serve de
+O `06_agente_arquivos.py` aceita outra missão por argumento
+(`python3 06_agente_arquivos.py ../06-agente-arquivos/missao-extra.md`), como o
+`npm run agente -- <missão>` em Node.
+
+**Atenção (atividade em Python):** `06_agente_arquivos.py` serve de
 referência de estrutura do núcleo, mas copiar este arquivo NÃO cumpre a
 atividade — as extensões obrigatórias (gate HITL + tool nova de autoria
 própria) são suas. Veja o enunciado em

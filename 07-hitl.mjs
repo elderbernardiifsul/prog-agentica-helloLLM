@@ -1,16 +1,20 @@
 // Degrau 07 — HITL (human-in-the-loop): o humano é parte do IO do agente.
-// Regra: NENHUMA escrita acontece sem aprovação no terminal.
-// Demo em aula: rode 2x — uma aprovando, outra negando com um motivo
-// ("quero em inglês") e observe o agente REAGIR à recusa no passo seguinte.
+// OBJETIVO: gate de aprovação — NENHUMA escrita acontece sem confirmação no
+//   terminal; a recusa (com motivo) vira observação e o modelo replaneja.
+// COMO RODAR: npm run 07
+// O QUE FAZER (demo): rode 2x — uma aprovando tudo, outra negando
+//   com um motivo (ex.: "quero em inglês").
+// O QUE OBSERVAR: a linha [INTERVENÇÃO] no trace e o agente REAGINDO à
+//   recusa no passo seguinte.
 import OpenAI from "openai";
 import readline from "node:readline/promises";
 import { defs, executores } from "./06-agente-arquivos/tools.mjs";
 
 const client = new OpenAI({
-  apiKey: process.env.GEMINI_API_KEY,
-  baseURL: process.env.LLM_BASE_URL ?? "https://generativelanguage.googleapis.com/v1beta/openai",
+  apiKey: process.env.LLM_API_KEY ?? "ollama", // com Ollama não há chave; qualquer string serve
+  baseURL: process.env.LLM_BASE_URL ?? "https://openrouter.ai/api/v1",
 });
-const MODEL = process.env.LLM_MODEL ?? "gemini-2.5-flash";
+const MODEL = process.env.LLM_MODEL ?? "openrouter/free";
 const MAX_PASSOS = 8;
 
 const MISSAO_CURTA =

@@ -1,14 +1,19 @@
 // Degrau 05 — MINI-LAB: seu primeiro agente em loop.
-// Complete os TODOs 1..3. Rode com: npm run 05
-// Desafios extras se sobrar tempo: mude MAX_PASSOS para 3 e observe o estado
-// "limite"; troque o system prompt para proibir busca binária e compare traces.
+// OBJETIVO: transformar o ciclo manual do degrau 04 num loop autônomo com
+//   três estados de parada: sucesso, limite e erro.
+// O QUE FAZER: complete os TODOs 1..3 e rode: npm run 05
+// O QUE OBSERVAR: o trace `[passo N] chute X -> resultado`; a busca binária
+//   convergindo em ~7 passos; o estado final impresso ao fim.
+// DESAFIOS EXTRAS (se sobrar tempo): mude MAX_PASSOS para 3 e observe o
+//   estado "limite"; troque o system prompt para proibir busca binária e
+//   compare os traces.
 import OpenAI from "openai";
 
 const client = new OpenAI({
-  apiKey: process.env.GEMINI_API_KEY,
-  baseURL: process.env.LLM_BASE_URL ?? "https://generativelanguage.googleapis.com/v1beta/openai",
+  apiKey: process.env.LLM_API_KEY ?? "ollama", // com Ollama não há chave; qualquer string serve
+  baseURL: process.env.LLM_BASE_URL ?? "https://openrouter.ai/api/v1",
 });
-const MODEL = process.env.LLM_MODEL ?? "gemini-2.5-flash";
+const MODEL = process.env.LLM_MODEL ?? "openrouter/free";
 
 const SECRETO = Math.floor(Math.random() * 100) + 1;
 const MAX_PASSOS = 10;

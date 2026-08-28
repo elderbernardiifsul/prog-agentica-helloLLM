@@ -1,5 +1,8 @@
 // Degrau 02b — o OUTRO padrão da indústria: a API Messages da Anthropic.
-// Este degrau é LEITURA DE CÓDIGO (execução opcional, exige ANTHROPIC_API_KEY).
+// OBJETIVO: contrastar os dois padrões dominantes de API de LLM. Este degrau
+//   é LEITURA DE CÓDIGO (execução opcional, exige ANTHROPIC_API_KEY).
+// COMO RODAR (opcional): npm run 02b
+// O QUE OBSERVAR: as sete diferenças abaixo — localize cada uma no código.
 //
 // Diferenças-chave em relação ao chat completions (degrau 02):
 //   1. Endpoint POST /v1/messages; auth via header "x-api-key" (o SDK cuida).

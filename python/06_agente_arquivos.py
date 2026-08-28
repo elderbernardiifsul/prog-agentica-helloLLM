@@ -1,11 +1,12 @@
 # Degrau 06 (espelho Python, núcleo RESOLVIDO) — agente de arquivos.
 # ATENÇÃO: este arquivo é referência de ESTRUTURA. Copiá-lo não cumpre a
-# atividade EaD — as extensões (gate HITL + tool nova de autoria própria)
+# atividade — as extensões (gate HITL + tool nova de autoria própria)
 # são suas. Enunciado: docs/atividade-ead-agente-arquivos.md
-# Rode: python3 06_agente_arquivos.py  (depois: cd .. && npm run verificar)
+# COMO RODAR: python3 06_agente_arquivos.py  (depois: cd .. && npm run verificar)
 import json
 import os
 import subprocess
+import sys
 from pathlib import Path
 
 from dotenv import load_dotenv
@@ -14,10 +15,10 @@ from openai import OpenAI
 load_dotenv("../.env")
 
 client = OpenAI(
-    api_key=os.environ.get("GEMINI_API_KEY"),
-    base_url=os.environ.get("LLM_BASE_URL", "https://generativelanguage.googleapis.com/v1beta/openai"),
+    api_key=os.environ.get("LLM_API_KEY"),
+    base_url=os.environ.get("LLM_BASE_URL", "https://openrouter.ai/api/v1"),
 )
-MODEL = os.environ.get("LLM_MODEL", "gemini-2.5-flash")
+MODEL = os.environ.get("LLM_MODEL", "openrouter/free")
 MAX_PASSOS = 15
 
 # ---- Tools (mesma sandbox do tools.mjs: tudo dentro de ../workspace) ----
@@ -32,6 +33,7 @@ def dentro_da_sandbox(relativo):
 
 
 def listar(caminho):
+    RAIZ.mkdir(parents=True, exist_ok=True)  # sandbox nasce vazia na 1ª listagem
     itens = sorted(dentro_da_sandbox(caminho).iterdir())
     return "\n".join(i.name + "/" if i.is_dir() else i.name for i in itens) or "(vazio)"
 
@@ -127,7 +129,11 @@ defs = [
 ]
 
 # ---- O loop ----
-missao = (Path(__file__).parent / ".." / "06-agente-arquivos" / "missao.md").read_text(encoding="utf-8")
+# A missão vem de missao.md — ou do caminho passado como argumento
+# (ex.: python3 06_agente_arquivos.py ../06-agente-arquivos/missao-extra.md).
+missao = Path(
+    sys.argv[1] if len(sys.argv) > 1 else Path(__file__).parent / ".." / "06-agente-arquivos" / "missao.md"
+).read_text(encoding="utf-8")
 
 messages = [
     {

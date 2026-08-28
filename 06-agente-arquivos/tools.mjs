@@ -91,6 +91,7 @@ export const defs = [
 
 export const executores = {
   async listar({ caminho }) {
+    await fs.mkdir(RAIZ, { recursive: true }); // sandbox nasce vazia na 1ª listagem
     const itens = await fs.readdir(dentroDaSandbox(caminho), { withFileTypes: true });
     return itens.map((i) => (i.isDirectory() ? i.name + "/" : i.name)).join("\n") || "(vazio)";
   },

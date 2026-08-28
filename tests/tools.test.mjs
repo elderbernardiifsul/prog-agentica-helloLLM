@@ -3,9 +3,13 @@ import assert from "node:assert/strict";
 import fs from "node:fs/promises";
 import { defs, executores } from "../06-agente-arquivos/tools.mjs";
 
-test("defs declara as 5 tools", () => {
-  const nomes = defs.map((d) => d.function.name).sort();
-  assert.deepEqual(nomes, ["escrever", "executar", "finalizar", "ler", "listar"]);
+test("defs declara as 5 tools originais", () => {
+  // Subconjunto, não igualdade: a atividade manda você ADICIONAR uma
+  // tool nova em defs — este teste continua passando com ela.
+  const nomes = new Set(defs.map((d) => d.function.name));
+  for (const esperada of ["escrever", "executar", "finalizar", "ler", "listar"]) {
+    assert.ok(nomes.has(esperada), `tool original ausente: ${esperada}`);
+  }
 });
 
 test("executar roda comando com cwd na sandbox", async () => {

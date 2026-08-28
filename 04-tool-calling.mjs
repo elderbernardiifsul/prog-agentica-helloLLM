@@ -1,12 +1,17 @@
 // Degrau 04 — tool calling: o modelo NÃO executa nada. Ele PEDE; SEU código executa.
-// Aqui fazemos UM ciclo completo, à mão, sem loop — para ver cada peça.
+// OBJETIVO: fazer UM ciclo completo à mão, sem loop, vendo cada peça: o
+//   contrato (schema), o pedido (tool_calls), o dispatch e a resposta final.
+// COMO RODAR: npm run 04
+// O QUE OBSERVAR: as quatro mensagens do ciclo no histórico — user, assistant
+//   com tool_calls (finish_reason "tool_calls"), tool com tool_call_id, e o
+//   assistant final usando o resultado.
 import OpenAI from "openai";
 
 const client = new OpenAI({
-  apiKey: process.env.GEMINI_API_KEY,
-  baseURL: process.env.LLM_BASE_URL ?? "https://generativelanguage.googleapis.com/v1beta/openai",
+  apiKey: process.env.LLM_API_KEY ?? "ollama", // com Ollama não há chave; qualquer string serve
+  baseURL: process.env.LLM_BASE_URL ?? "https://openrouter.ai/api/v1",
 });
-const MODEL = process.env.LLM_MODEL ?? "gemini-2.5-flash";
+const MODEL = process.env.LLM_MODEL ?? "openrouter/free";
 
 // 1) O CONTRATO: a tool é declarada por um schema JSON. O modelo só vê isto.
 const tools = [
