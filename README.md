@@ -69,12 +69,14 @@ da atividade (roteiro de desenvolvimento em etapas, critérios, entrega):
 
 📚 <https://notebooklm.google.com/notebook/e147d1de-a7b9-43b8-a349-b1440f212450>
 
-Notebook com todo o material da aula (docs, slides e código) mais as fontes
+Notebook com todo o material deste repositório (README, guia, exemplo
+resolvido, material de apoio, enunciado, slides e código) mais as fontes
 canônicas dos temas centrais: documentação das APIs OpenAI (function calling,
 estado de conversa) e Anthropic (Messages, tool use, janela de contexto),
-compatibilidade OpenAI do Gemini e do Ollama, o artigo ReAct e o guia
-*Building Effective AI Agents*. Use para perguntas, revisão e geração de
-quizzes/resumos; as citações apontam a fonte exata.
+OpenRouter (roteador de modelos gratuitos e quickstart), compatibilidade
+OpenAI do Ollama, o artigo ReAct e o guia *Building Effective AI Agents*. Use
+para perguntas, revisão e geração de quizzes e resumos; as citações apontam a
+fonte exata.
 
 ## Estrutura do repositório
 
